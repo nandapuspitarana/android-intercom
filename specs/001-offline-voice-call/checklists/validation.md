@@ -36,7 +36,7 @@ wrapped "Settings" letter by letter on a phone-width screen; API 26 calls on min
 | SC-003 | Mouth-to-ear delay < 0.5 s (target 0.2 s) | **Partly verified** | Pipeline only: capture to first audible frame at the peer, loopback, median 75 ms, p95 78 ms (jitter buffer included). Audio hardware, WiFi and Bluetooth latency **not measured**: manual |
 | SC-004 | No disturbing echo in two-way talk | **Not verified** | Needs two real phones; the app enables the platform echo canceller/noise suppressor/AGC where the device offers them (`AudioCapture`) |
 | SC-005 | Incoming call on a locked, screen-off phone alerts within 3 s | **Verified on the emulator** | `BackgroundCallFunctionalTest.aCallRingsAndCanBeAnsweredWhileTheScreenIsOff`: screen off, app in background, call arrives, screen turns on, Accept works. Real phones and Android 14+ full-screen-intent permission per vendor: **manual** (Scenario B) |
-| SC-006 | A call stays connected for at least 30 minutes | **See soak result below** | `SoakTest` (loopback) |
+| SC-006 | A call stays connected for at least 30 minutes | **Verified on loopback** | `SoakTest`: 31 minutes, 62 checks, still connected with audio flowing at every check, heap flat at 14 MB. Real WiFi/phones (battery, WiFi power saving, vendor limits): **manual** |
 | SC-007 | First-time user pairs and calls in under 3 minutes without instructions | **Not verified** | Needs a usability check with a person. The pairing flow itself is fully automated (`PairingFunctionalTest`) |
 | SC-008 | Lost connection ends the call on both devices within 15 s with a clear message | **Verified (JVM + UI)** | `CallControlsTest.noValidMessageFor10SecondsEndsTheCallAsConnectionLost`, `theOtherSideNoticesWhenTheCallerLosesTheNetworkAndEndsToo`, `InCallControlsFunctionalTest.aStalledNetworkShowsPoorConnectionThenEndsAsConnectionLost` (10 s heartbeat rule; verified with a fake clock) |
 | SC-009 | Zero bytes of call data over mobile data | **Not verified** | The code binds sockets to the WiFi `Network` and never requires internet (`WifiNetworkBinder`); no traffic capture was done. Needs a phone with mobile data on and a traffic monitor (Scenario A) |
@@ -65,4 +65,4 @@ wrapped "Settings" letter by letter on a phone-width screen; API 26 calls on min
 
 ## SC-006 soak result
 
-_Filled in after the 31-minute run (see below)._
+`./gradlew :app:testDebugUnitTest -Psoak -Psoak.minutes=31` on 2026-10-01: two engines over real localhost sockets with Opus and AES-GCM stayed connected for 31 minutes; 62 checks (every 30 s), audio flowing both ways at every check; JVM heap 14 MB at start and 14 MB at the end (no leak).
