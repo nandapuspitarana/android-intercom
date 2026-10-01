@@ -58,9 +58,9 @@ incoming call, in-call, pairing, settings, history, hotspot help)
 | III | Voice first, low latency | PASS | Opus 20 ms frames, UDP, adaptive jitter buffer, voice-communication audio mode with AEC/NS/AGC; no video in this feature |
 | IV | Modern Android | PASS | AndroidX, minSdk 24, foreground service with correct types, full-screen-intent notification, no background `startActivity()` |
 | V | Explicit call state | PASS | Single `CallStateMachine` in the service process; heartbeat and timeouts defined in contracts/ |
-| VI | Testability | PASS | Pure-Kotlin core (no Android imports) enables JVM tests; loopback two-engine tests; quickstart covers WiFi-no-internet and hotspot |
+| VI | Testability and Functional Tests | PASS | Pure-Kotlin core enables JVM unit tests; loopback two-engine tests; **a `@FunctionalTest` per user story** (real UI + service vs. in-process `FakePeerDevice` with `NetworkFaultProxy`) run by `./gradlew functionalTest`; quickstart covers manual two-device WiFi-no-internet and hotspot |
 | VII | Simplicity | PASS (see tracking) | Layered packages, one responsibility each; no global statics; toggleable logger |
-| Tech constraints | Signaling "TLS over TCP" | **DEVIATION** | Signaling uses application-layer AES-GCM with pairing-derived keys instead of TLS; justified in Complexity Tracking |
+| Tech constraints | Signaling "TLS over TCP" | PASS (resolved) | Constitution v1.1.1 now reads "authenticated encryption (TLS or an equivalent pairing-keyed scheme)"; signaling uses AES-GCM with pairing-derived keys |
 
 **Post-design re-check**: the deviation above is the only one; all other gates still pass after
 Phase 1 design (data-model.md and contracts/ were checked against Principles II, III and V).

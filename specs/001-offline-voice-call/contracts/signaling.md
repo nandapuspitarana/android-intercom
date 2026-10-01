@@ -15,7 +15,7 @@ FR-017). Protocol major version: 1.
 - At most 8 concurrent inbound connections; at most 5 new connections per source per 10 s; a
   connection that sends nothing for 10 s before the first complete frame is closed.
 - Body is UTF-8 JSON, one object per frame, parsed with a strict parser (no object
-  deserialization, unknown fields ignored, depth <= 4, strings <= 256 chars).
+  deserialization, unknown fields ignored, depth <= 4, strings <= 256 chars (except the `frame` field of RELAY, which holds a whole base64 frame and may be up to 4096 chars)).
 
 ## Plaintext messages (before a call key exists)
 
@@ -35,7 +35,7 @@ with `PAIR_REQUIRED` (or ignored if `autoReject` is on). No ring is shown for it
 ## Encrypted messages (after INVITE)
 
 Both sides derive per-call keys (research R6):
-`K = HKDF-SHA256(PS, salt=nonceCaller||nonceCallee, info="twoway call v1", 2*32 + 2*4)` giving a
+`K = HKDF-SHA256(PS, salt=nonceCaller||nonceCallee, info="twoway call v1", 4*32 + 4*4)` (144 bytes) giving a
 signaling key and a media key per direction, plus 4-byte nonce salts. The callee's nonce is
 returned in `RINGING`/`ACCEPT` (in the clear, authenticated by `mac`).
 

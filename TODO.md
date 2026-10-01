@@ -1,3 +1,10 @@
+> **Status 2026-10-01:** most of this roadmap is now implemented by feature 001 (`specs/001-offline-voice-call/`).
+> Done: modern build (Fase 0), listener service with full-screen incoming calls (Fase 1), NSD/multicast discovery and
+> hotspot directory (Fase 2), call signaling and state machine (Fase 3), Opus voice over UDP with jitter buffer (Fase 4),
+> hotspot hub/relay and local hotspot (Fase 6), pairing and encryption (Fase 7), new UI (Fase 8), tests (Fase 9).
+> **Not done:** video (Fase 5, a separate future feature), push-to-talk/auto-answer/group calls, forward secrecy and key
+> rotation, WiFi Direct / WiFi Aware. See `specs/001-offline-voice-call/tasks.md` for the exact state.
+
 # TODO: Upgrade Two Way menjadi Intercom / Telepon Tanpa Data (WiFi/LAN)
 
 Tujuan: aplikasi yang bisa memanggil dan bicara (suara, opsional video) antar perangkat

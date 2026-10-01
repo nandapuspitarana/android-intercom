@@ -20,6 +20,19 @@ Runnable scenarios that prove the feature end to end. Details of messages and en
 Expected: all unit tests pass, including the in-JVM two-engine loopback call (accept, reject,
 timeout, busy, glare, peer loss).
 
+## Automated functional tests (no second phone needed)
+
+Each user story has a `@FunctionalTest` that drives the real UI and service against an in-process
+fake peer (`FakePeerDevice`) with injectable network faults (`NetworkFaultProxy`):
+
+```text
+./gradlew functionalTest      # headless on the Gradle Managed Device (API 34 emulator)
+```
+
+Expected: all functional tests pass (US1 call flow, US2 background/locked call, US3 outcomes, US4
+pairing, US5 hotspot/relay, US6 in-call controls, security junk-input test). The manual two-device
+scenarios below remain required for real audio quality, vendor behaviour and mobile-data checks.
+
 ## Scenario A - WiFi without internet (US1, SC-001, SC-009)
 
 1. Join phones A and B to the offline WiFi. Open the app on both and grant microphone/notification permissions.

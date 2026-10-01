@@ -1,7 +1,10 @@
 <!--
 Sync Impact Report
-- Version change: (template) -> 1.0.0
-- Modified principles: none (initial ratification; all placeholders replaced)
+- Version change: 1.1.0 -> 1.1.1 (PATCH: Technical Constraints wording; signaling is secured by authenticated encryption
+  keyed from the pairing secret instead of TLS, see specs/001-offline-voice-call/plan.md Complexity Tracking)
+- Earlier: 1.0.0 -> 1.1.0 (MINOR: Principle VI materially expanded, mandatory functional tests per story)
+- Modified principles: VI "Testability" -> "Testability and Functional Tests (NON-NEGOTIABLE)"
+- Earlier: (template) -> 1.0.0 initial ratification; all placeholders replaced
 - Added sections: Core Principles I-VII, Platform & Technical Constraints, Development Workflow & Quality Gates, Governance
 - Removed sections: none
 - Deferred TODOs: none
@@ -48,11 +51,15 @@ service, not in UI classes. Signaling MUST define invite, ringing, accept, rejec
 and hangup. Heartbeats and timeouts MUST detect lost peers and WiFi loss, and the app MUST end or
 recover the call cleanly. A WifiLock MUST be held during calls and while listening, if enabled.
 
-### VI. Testability
-The signaling protocol parser, call state machine, and jitter buffer MUST have unit tests. Every
-user-facing call flow (call, answer, reject, busy, hangup, peer loss) MUST have an automated or
-documented two-device test, including a no-internet WiFi and a hotspot scenario. Bug fixes MUST
-include a regression test where one is feasible.
+### VI. Testability and Functional Tests (NON-NEGOTIABLE)
+The signaling protocol parser, call state machine, and jitter buffer MUST have unit tests.
+Every user story MUST also have automated **functional tests** that drive the real UI and
+service end to end against an in-process fake peer device (with controllable accept, reject,
+busy, and injected network faults), written before the implementation. A story MUST NOT be
+marked done until its functional tests pass. Every user-facing call flow (call, answer, reject,
+busy, hangup, peer loss) MUST additionally have a documented two-device manual test, including a
+no-internet WiFi and a hotspot scenario. Bug fixes MUST include a regression test where one is
+feasible.
 
 ### VII. Simplicity and Clear Boundaries
 No global mutable static state for UI or call data. Classes MUST have one responsibility
@@ -61,8 +68,9 @@ No global mutable static state for UI or call data. Classes MUST have one respon
 
 ## Platform & Technical Constraints
 
-- Transport: mDNS/NSD discovery (with UDP multicast/broadcast and manual IP/QR fallback), TLS over
-  TCP for signaling, RTP/UDP for audio and video.
+- Transport: mDNS/NSD discovery (with UDP multicast/broadcast and manual IP/QR fallback), TCP
+  signaling protected by authenticated encryption (TLS, or an equivalent scheme keyed from the
+  pairing secret), RTP-style UDP for audio and video.
 - Network roles: peer on shared WiFi/LAN, or host/client on a phone hotspot.
 - Data: profile and contacts stored locally only; nothing leaves the local network.
 - Languages: Indonesian and English UI.
@@ -85,4 +93,4 @@ materially expanding guidance, PATCH for clarifications. All specs, plans, and r
 compliance; non-compliance MUST be documented and justified. `TODO.md` is the working roadmap and
 MUST stay consistent with this constitution.
 
-**Version**: 1.0.0 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01
+**Version**: 1.1.1 | **Ratified**: 2026-10-01 | **Last Amended**: 2026-10-01

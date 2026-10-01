@@ -44,9 +44,10 @@ Two-way voice during a call (FR-005, FR-008, FR-016, FR-018; SC-003, SC-004, SC-
 
 1. Direct: each side sends to the peer's `ip:mediaPort`. A 2 s probe (a keep-alive packet each way)
    must succeed or the call falls back.
-2. Via hub (hotspot with client isolation): packets are sent to `hub:relayPort` prefixed by the
-   4-byte `session tag`; the hub swaps in the other client's address and forwards the datagram
-   unchanged (it cannot decrypt). Packets for unknown tags are dropped.
+2. Via hub (hotspot with client isolation): packets are sent to `hub:relayPort` unchanged. The hub reads the
+   `session tag` from bytes 8-11 of the packet header (no extra prefix), learns each phone's address from its first
+   packet, and forwards each datagram unchanged to the other phone (it cannot decrypt). Packets for unknown tags,
+   from a third address, shorter than 12 or longer than 1024 bytes are dropped.
 3. If neither path works within the 10 s connect timeout the call fails with a message explaining
    that the network blocks device-to-device traffic (FR-021).
 
